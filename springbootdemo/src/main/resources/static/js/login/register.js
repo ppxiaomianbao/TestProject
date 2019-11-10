@@ -2,6 +2,7 @@
 var pageii = null;
 var rootPath = getPath();
 $(function() {
+    alert("123");
     $("#form").validate({
         submitHandler : function(form) {// 必须写在验证前面，否则无法ajax提交
             //if(checkSubmit()){return;}

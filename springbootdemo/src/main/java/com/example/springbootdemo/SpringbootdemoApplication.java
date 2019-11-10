@@ -45,7 +45,7 @@ public class SpringbootdemoApplication extends WebMvcConfigurationSupport {
     // ，excludePathPatterns方法设置不需要拦截的请求
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new CheckInterceptor()).addPathPatterns("/**").excludePathPatterns("/login/login","/login/index","/login/register");
+        registry.addInterceptor(new CheckInterceptor()).addPathPatterns("/**").excludePathPatterns("/login/*","/static/**");
         //excludePathPatterns("/login/login","/static/**", "/templates/**");
     }
 
@@ -64,7 +64,9 @@ public class SpringbootdemoApplication extends WebMvcConfigurationSupport {
      */
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/**");
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         super.addResourceHandlers(registry);
     }
+
+
 }

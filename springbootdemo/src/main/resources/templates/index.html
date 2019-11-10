@@ -19,4 +19,35 @@
     <h3><label>已经入主页面！</label></h3>
 </div>
 </body>
+<script>
+    //判断当前浏览器是否支持webSocket
+    var ws;
+    if('WebSocket' in window){
+        ws = new WebSocket("ws://localhost:8080/demo/websocketTest");
+    }else{
+        alert('Not support websocket');
+    }
+    if (ws.readyState === 1) {
+        ws.send("hello");//向服务器发送消息
+    } else {
+        //do something
+    }
+    // 建立 web socket 连接成功触发事件
+    ws.onopen = function() {
+        // 使用 send() 方法发送数据
+        ws.send('发送数据');
+        alert('数据发送中...');
+    };
+
+    // 接收服务端数据时触发事件
+    ws.onmessage = function(evt) {
+        var received_msg = evt.data;
+        alert('数据已接收...' + received_msg);
+    };
+
+    // 断开 web socket 连接成功触发事件
+    ws.onclose = function() {
+        alert('连接已关闭...');
+    };
+</script>
 </html>
