@@ -25,7 +25,7 @@ import javax.websocket.server.ServerEndpointConfig;
 public class MySpringConfig extends DefaultServerEndpointConfigurator implements ApplicationContextAware {
     private static volatile BeanFactory context;
 
-    //获取httpservletrequest并保存
+    //httpSession
     @Override
     public void modifyHandshake(ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response) {
         HttpSession httpSession=(HttpSession) request.getHttpSession();

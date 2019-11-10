@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * */
 
 @Component
+//@ServerEndpoint(value = "/websocketTest",configurator = MySpringConfig2.class)
 @ServerEndpoint(value = "/websocketTest",configurator = MySpringConfig.class)
 public class MySocket {
     public User getUser() {
