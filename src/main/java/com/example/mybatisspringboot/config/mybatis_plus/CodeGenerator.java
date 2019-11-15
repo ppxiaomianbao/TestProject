@@ -1,22 +1,22 @@
 package com.example.mybatisspringboot.config.mybatis_plus;
 
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
-import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
+import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import com.baomidou.mybatisplus.generator.config.rules.FileType;
+import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 /**
  * @ProjectName: springbootdemo
  * @Package: com.example.springbootdemo.config.mybatis
@@ -58,12 +58,13 @@ public class CodeGenerator {
         gc.setAuthor("limx");//作者F:
         gc.setOpen(false);//生成代码完成后是否打开文件
         gc.setActiveRecord(true);//支持AR
-        gc.setBaseResultMap(true);//xml中的ResultMap
+        gc.setEnableCache(true);   //二级缓存
+        gc.setBaseResultMap(true);//xml中的ResultMaptest
         gc.setBaseColumnList(true);//ResultMap
-        gc.setIdType(IdType.AUTO);//ColumnList
+        //gc.setIdType(IdType.AUTO);//ColumnList
         // gc.setSwagger2(true); 实体属性 Swagger2 注解
         gc.setServiceName("%sService");//默认I+数据库表+Service
-        gc.setFileOverride(false);//是否覆盖已有文件
+        gc.setFileOverride(true);//是否覆盖已有文件
         mpg.setGlobalConfig(gc);
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
@@ -73,6 +74,14 @@ public class CodeGenerator {
         dsc.setUsername("root");
         dsc.setPassword("root");
         dsc.setDbType(DbType.MYSQL);//支持12种数据库
+        mpg.setDataSource(dsc);
+        //自定义类型转换器
+        dsc.setTypeConvert(new MySqlTypeConvert() {
+            @Override
+            public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
+                return super.processTypeConvert(globalConfig, fieldType);
+            }
+        });
         mpg.setDataSource(dsc);
         // 包配置
         PackageConfig pc = new PackageConfig();
@@ -93,7 +102,7 @@ public class CodeGenerator {
         // 如果模板引擎是 freemarker
         String templatePath = "/templates/mapper.xml.ftl";
         // 如果模板引擎是 velocity
-        // String templatePath = "/templates/mapper.xml.vm";
+         //String templatePath = "/templates/mapper.xml.vm";
         // 自定义输出配置
         List<FileOutConfig> focList = new ArrayList<>();
         // 自定义配置会被优先输出
@@ -133,12 +142,14 @@ public class CodeGenerator {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setEntityLombokModel(true);
-        strategy.setRestControllerStyle(true);
+        strategy.setTablePrefix(""); //设置表前缀
         strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
 //            strategy.setSuperEntityColumns("id");
         strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix(pc.getModuleName() + "_");
+        strategy.setEntityLombokModel(true);
+        strategy.setRestControllerStyle(true);
+        strategy.setSuperEntityColumns("id");
+        //strategy.setTablePrefix(pc.getModuleName() + "_");
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
